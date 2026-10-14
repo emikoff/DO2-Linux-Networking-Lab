@@ -1,0 +1,17 @@
+.idea/
+.vscode/
+*.swp
+.DS_Store
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.log
+*.tmp
+*~
+*.box
+*.ova
+*.ovf
+*.vdi
+*.vmdk

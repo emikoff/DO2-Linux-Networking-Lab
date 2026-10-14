@@ -1,0 +1,13 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      dhcp4: false
+      addresses: [10.10.0.1/18]
+    enp0s8:
+      dhcp4: false
+      addresses: [10.100.0.11/16]
+      routes:
+        - to: 10.20.0.0/26
+          via: 10.100.0.12
