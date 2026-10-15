@@ -19,15 +19,27 @@ subnet 10.20.0.0 netmask 255.255.255.192 {
     range 10.20.0.2 10.20.0.19;
     range 10.20.0.21 10.20.0.50;
     option routers 10.20.0.1;
-    option domain-name-servers 1.1.1.1;
+    option domain-name-servers 10.20.0.1;
 }
 ```
 
-Адрес `10.20.0.20` исключён из пула, поскольку статически назначен веб-серверу `ws22`.
+На исходном лабораторном скриншоте использован единый диапазон `10.20.0.2–10.20.0.50`. В повторяемом примере адрес `10.20.0.20` исключён из пула, поскольку статически назначен веб-серверу `ws22`; это устраняет потенциальный конфликт адресов.
 
 Полный пример находится в [`configs/dhcp/r2-dhcpd.conf`](../configs/dhcp/r2-dhcpd.conf).
 
 ![Конфигурация DHCP на r2](images/dhcp-r2-config.png)
+
+DHCP-сервер привязан к интерфейсу LAN 2 через `/etc/default/isc-dhcp-server`:
+
+```text
+INTERFACESv4="enp0s8"
+```
+
+![Интерфейс DHCP-сервера r2](images/dhcp-r2-interface.png)
+
+На самом маршрутизаторе проверен DNS resolver с `nameserver 8.8.8.8`.
+
+![Настройка resolver на r2](images/dhcp-r2-resolver.png)
 
 После перезапуска сервиса клиент получил адрес и маршрут автоматически:
 
@@ -44,6 +56,15 @@ ip -4 address show enp0s3
 
 ## Reservation по MAC
 
+На `ws11` включён DHCP и задан лабораторный MAC-адрес:
+
+```yaml
+dhcp4: true
+macaddress: 10:10:10:10:10:ba
+```
+
+![Netplan клиента ws11](images/dhcp-ws11-netplan.png)
+
 На `r1` создано закрепление адреса:
 
 ```dhcpd
@@ -54,6 +75,12 @@ host ws11 {
 ```
 
 ![DHCP reservation](images/dhcp-reservation.png)
+
+Сервер `r1` привязан к интерфейсу `enp0s3`, который смотрит в сеть `10.10.0.0/18`.
+
+![Интерфейс DHCP-сервера r1](images/dhcp-r1-interface.png)
+
+![Настройка resolver на r1](images/dhcp-r1-resolver.png)
 
 ![Закреплённый адрес ws11](images/dhcp-fixed-client.png)
 
@@ -75,6 +102,15 @@ sudo dhclient -v enp0s3
 ```bash
 sudo dhcpd -t -cf /etc/dhcp/dhcpd.conf
 ```
+
+## Использованные параметры DHCP
+
+- `range` задаёт динамический пул адресов;
+- `option routers` передаёт клиенту default gateway;
+- `option domain-name-servers` передаёт DNS-сервер;
+- `hardware ethernet` сопоставляет reservation с MAC клиента;
+- `fixed-address` закрепляет конкретный IPv4-адрес;
+- `default-lease-time` и `max-lease-time` управляют сроком аренды.
 
 ## Результат
 
