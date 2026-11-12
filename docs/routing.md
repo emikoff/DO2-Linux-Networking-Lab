@@ -1,6 +1,6 @@
-# Многоузловая маршрутизация
+# Part 5. Статическая маршрутизация сети
 
-[← README](../README.md) · [Топология](topology.md) · [Адресация](addressing.md) · [Firewall](firewall.md) · **Маршрутизация** · [DHCP](dhcp.md) · [NAT](nat.md) · [SSH-туннели](ssh-tunnels.md)
+[← README](../README.md) · [Схема](topology.md) · [Part 1](addressing.md#part-1-расчёт-сетей-и-адресов) · [Part 2](addressing.md#part-2-статическая-маршрутизация-между-двумя-машинами) · [Part 3](addressing.md#part-3-измерение-скорости-соединения) · [Part 4](firewall.md) · **Part 5** · [Part 6](dhcp.md) · [Part 7](nat.md) · [Part 8](ssh-tunnels.md)
 
 ---
 
@@ -74,15 +74,24 @@ sudo tcpdump -tn -i enp0s3
 
 ```bash
 # r1
-sudo tcpdump -n -i enp0s3
+sudo tcpdump -tnv -c 6 -i enp0s3 \
+  'udp dst portrange 33434-33534 or icmp[0] == 11 or (icmp[0] == 3 and src host 10.20.0.10)'
 
 # ws11
 traceroute 10.20.0.10
 ```
 
+Фильтр оставляет диагностические UDP-пробы и связанные с ними ICMP-ответы, а `-c 6` ограничивает объём вывода. Повторная проверка сохранила точную команду захвата и успешный путь до конечного узла:
+
+![Команда tcpdump и пакеты traceroute на r1](images/tcpdump-traceroute-command.png)
+
+![Успешный traceroute от ws11 до ws21](images/traceroute-success-current.png)
+
+Исходный лабораторный кадр дополнительно показывает полный обмен, включая ответы `ICMP Time Exceeded` и финальный `ICMP Port Unreachable`:
+
 ![Маршрут через r1 и r2](images/traceroute-path.png)
 
-`traceroute` увеличивает TTL последовательных пакетов. При обнулении TTL промежуточный маршрутизатор возвращает ICMP Time Exceeded, благодаря чему становится виден путь.
+Ключ `-t` убирает временные метки, `-n` запрещает преобразование адресов в имена, а `-v` выводит расширенные сведения о пакетах. `traceroute` увеличивает TTL последовательных пакетов. При обнулении TTL промежуточный маршрутизатор возвращает ICMP Time Exceeded, благодаря чему становится виден путь.
 
 Для проверки ошибки маршрутизации отправлен пакет в отсутствующую сеть:
 
@@ -101,4 +110,4 @@ ping -c 1 10.30.0.10
 
 ---
 
-[← Предыдущий этап: firewall](firewall.md) | [Следующий этап: DHCP →](dhcp.md)
+[← Предыдущий этап: Part 4 — сетевой экран](firewall.md) | [Следующий этап: Part 6 — DHCP →](dhcp.md)

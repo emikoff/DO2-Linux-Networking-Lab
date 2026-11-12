@@ -1,6 +1,6 @@
-# Firewall и обнаружение узлов
+# Part 4. Сетевой экран и обнаружение узлов
 
-[← README](../README.md) · [Топология](topology.md) · [Адресация](addressing.md) · **Firewall** · [Маршрутизация](routing.md) · [DHCP](dhcp.md) · [NAT](nat.md) · [SSH-туннели](ssh-tunnels.md)
+[← README](../README.md) · [Схема](topology.md) · [Part 1](addressing.md#part-1-расчёт-сетей-и-адресов) · [Part 2](addressing.md#part-2-статическая-маршрутизация-между-двумя-машинами) · [Part 3](addressing.md#part-3-измерение-скорости-соединения) · **Part 4** · [Part 5](routing.md) · [Part 6](dhcp.md) · [Part 7](nat.md) · [Part 8](ssh-tunnels.md)
 
 ---
 
@@ -46,4 +46,4 @@ nmap -Pn 192.168.100.10
 
 ---
 
-[← Предыдущий этап: адресация](addressing.md) | [Следующий этап: маршрутизация →](routing.md)
+[← Предыдущий этап: Part 3 — измерение скорости](addressing.md#part-3-измерение-скорости-соединения) | [Следующий этап: Part 5 — маршрутизация сети →](routing.md)

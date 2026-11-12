@@ -1,6 +1,6 @@
-# NAT
+# Part 7. NAT
 
-[← README](../README.md) · [Топология](topology.md) · [Адресация](addressing.md) · [Firewall](firewall.md) · [Маршрутизация](routing.md) · [DHCP](dhcp.md) · **NAT** · [SSH-туннели](ssh-tunnels.md)
+[← README](../README.md) · [Схема](topology.md) · [Part 1](addressing.md#part-1-расчёт-сетей-и-адресов) · [Part 2](addressing.md#part-2-статическая-маршрутизация-между-двумя-машинами) · [Part 3](addressing.md#part-3-измерение-скорости-соединения) · [Part 4](firewall.md) · [Part 5](routing.md) · [Part 6](dhcp.md) · **Part 7** · [Part 8](ssh-tunnels.md)
 
 ---
 
@@ -110,4 +110,4 @@ telnet 10.100.0.12 8080
 
 ---
 
-[← Предыдущий этап: DHCP](dhcp.md) | [Следующий этап: SSH-туннели →](ssh-tunnels.md)
+[← Предыдущий этап: Part 6 — DHCP](dhcp.md) | [Следующий этап: Part 8 — SSH-туннели →](ssh-tunnels.md)

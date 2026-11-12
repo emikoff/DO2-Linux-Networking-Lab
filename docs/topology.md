@@ -1,6 +1,6 @@
 # Топология и адресный план
 
-[← README](../README.md) · **Топология** · [Адресация](addressing.md) · [Firewall](firewall.md) · [Маршрутизация](routing.md) · [DHCP](dhcp.md) · [NAT](nat.md) · [SSH-туннели](ssh-tunnels.md)
+[← README](../README.md) · **Схема** · [Part 1](addressing.md#part-1-расчёт-сетей-и-адресов) · [Part 2](addressing.md#part-2-статическая-маршрутизация-между-двумя-машинами) · [Part 3](addressing.md#part-3-измерение-скорости-соединения) · [Part 4](firewall.md) · [Part 5](routing.md) · [Part 6](dhcp.md) · [Part 7](nat.md) · [Part 8](ssh-tunnels.md)
 
 ---
 
@@ -39,4 +39,4 @@ ip route
 
 ---
 
-[← README](../README.md) | [Следующий этап: адресация →](addressing.md)
+[← Вернуться в README](../README.md) | [Начать лабораторную: Part 1 →](addressing.md#part-1-расчёт-сетей-и-адресов)

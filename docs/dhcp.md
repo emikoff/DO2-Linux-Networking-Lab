@@ -1,6 +1,6 @@
-# DHCP
+# Part 6. Динамическая настройка IP с помощью DHCP
 
-[← README](../README.md) · [Топология](topology.md) · [Адресация](addressing.md) · [Firewall](firewall.md) · [Маршрутизация](routing.md) · **DHCP** · [NAT](nat.md) · [SSH-туннели](ssh-tunnels.md)
+[← README](../README.md) · [Схема](topology.md) · [Part 1](addressing.md#part-1-расчёт-сетей-и-адресов) · [Part 2](addressing.md#part-2-статическая-маршрутизация-между-двумя-машинами) · [Part 3](addressing.md#part-3-измерение-скорости-соединения) · [Part 4](firewall.md) · [Part 5](routing.md) · **Part 6** · [Part 7](nat.md) · [Part 8](ssh-tunnels.md)
 
 ---
 
@@ -41,18 +41,29 @@ INTERFACESv4="enp0s8"
 
 ![Настройка resolver на r2](images/dhcp-r2-resolver.png)
 
-После перезапуска сервиса клиент получил адрес и маршрут автоматически:
+По лабораторному сценарию после перезапуска DHCP-сервера машина `ws21` перезагружается. После загрузки клиент должен получить адрес и маршрут автоматически; результат проверяется командами `ip a` и `ping` до статического узла `ws22`:
 
 ```bash
+# r2
 sudo systemctl restart isc-dhcp-server
-sudo dhclient -r enp0s3
-sudo dhclient -v enp0s3
-ip -4 address show enp0s3
+
+# ws21
+sudo reboot
+ip a
+ping 10.20.0.20
 ```
 
-![Динамический адрес клиента](images/dhcp-dynamic-client.png)
+![Перезапуск DHCP-сервера и проверка активной службы](images/dhcp-service-active.png)
 
-При запуске клиент выполняет обмен DHCPDISCOVER → DHCPOFFER → DHCPREQUEST → DHCPACK. В результате он получает не только IPv4-адрес, но и маску, default gateway, DNS и срок аренды.
+После перезагрузки клиент получил адрес `10.20.0.3/26` с конечным сроком аренды. Таблица маршрутизации содержит записи `proto dhcp`, а `ping` подтверждает доступность статического узла `ws22`:
+
+![Динамический DHCP-адрес и связь с ws22 после перезагрузки](images/dhcp-dynamic-after-reboot.png)
+
+Исходный лабораторный кадр со статическим адресом до переключения Netplan на DHCP также сохранён как часть последовательности настройки:
+
+![Статический адрес клиента перед переходом на DHCP](images/dhcp-dynamic-client.png)
+
+При запуске DHCP-клиент выполняет обмен DHCPDISCOVER → DHCPOFFER → DHCPREQUEST → DHCPACK. Первичная выдача после перезагрузки подтверждена адресом `10.20.0.3`, а повторный запрос lease ниже — адресом `10.20.0.2` и подробным протокольным обменом.
 
 ## Reservation по MAC
 
@@ -82,7 +93,9 @@ host ws11 {
 
 ![Настройка resolver на r1](images/dhcp-r1-resolver.png)
 
-![Закреплённый адрес ws11](images/dhcp-fixed-client.png)
+Результат reservation подтверждён на клиенте: MAC `10:10:10:10:10:ba`, динамически назначенный адрес `10.10.0.2/18`, DHCP-маршрут через `10.10.0.1` и связь со шлюзом:
+
+![Закреплённый по MAC DHCP-адрес ws11](images/dhcp-fixed-client-ws11.png)
 
 ## Обновление аренды
 
@@ -96,6 +109,10 @@ sudo dhclient -v enp0s3
 Ключ `-r` отправляет DHCPRELEASE и удаляет текущую аренду, а `-v` показывает подробный обмен сообщениями при получении нового адреса.
 
 ![Обновление DHCP lease](images/dhcp-lease-renewal.png)
+
+Дополнительный исходный кадр той же проверки показывает `ws21`, получивший динамический адрес `10.20.0.2` после обмена DHCPDISCOVER → DHCPOFFER → DHCPREQUEST → DHCPACK:
+
+![Повторное получение динамического адреса на ws21](images/dhcp-fixed-client.png)
 
 Перед запуском конфигурация проверяется без изменения состояния службы:
 
@@ -118,4 +135,4 @@ sudo dhcpd -t -cf /etc/dhcp/dhcpd.conf
 
 ---
 
-[← Предыдущий этап: маршрутизация](routing.md) | [Следующий этап: NAT →](nat.md)
+[← Предыдущий этап: Part 5 — маршрутизация сети](routing.md) | [Следующий этап: Part 7 — NAT →](nat.md)

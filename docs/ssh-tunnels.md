@@ -1,6 +1,6 @@
-# SSH-туннели
+# Part 8. SSH-туннели
 
-[← README](../README.md) · [Топология](topology.md) · [Адресация](addressing.md) · [Firewall](firewall.md) · [Маршрутизация](routing.md) · [DHCP](dhcp.md) · [NAT](nat.md) · **SSH-туннели**
+[← README](../README.md) · [Схема](topology.md) · [Part 1](addressing.md#part-1-расчёт-сетей-и-адресов) · [Part 2](addressing.md#part-2-статическая-маршрутизация-между-двумя-машинами) · [Part 3](addressing.md#part-3-измерение-скорости-соединения) · [Part 4](firewall.md) · [Part 5](routing.md) · [Part 6](dhcp.md) · [Part 7](nat.md) · **Part 8**
 
 ---
 
@@ -37,7 +37,7 @@ ssh -L 8080:localhost:80 morynkar@10.20.0.20 -p2022
 ![Создание local tunnel](images/ssh-local-tunnel.png)
 
 ```bash
-curl http://127.0.0.1:8080
+telnet 127.0.0.1 8080
 ```
 
 ![Проверка local tunnel](images/ssh-local-check.png)
@@ -55,12 +55,12 @@ ssh -R 8080:localhost:80 morynkar@10.10.0.2 -p2022
 ![Создание remote tunnel](images/ssh-remote-tunnel.png)
 
 ```bash
-curl http://127.0.0.1:8080
+telnet 127.0.0.1 8080
 ```
 
 ![Проверка remote tunnel](images/ssh-remote-check.png)
 
-В этой команде порт `8080` открывается на `ws11`, а данные через SSH-сессию передаются к `localhost:80` машины `ws22`.
+В этой команде порт `8080` открывается на `ws11`, а данные через SSH-сессию передаются к `localhost:80` машины `ws22`. Строка `Connected to 127.0.0.1` в обоих опытах подтверждает установление TCP-соединения через туннель.
 
 В production-сценарии дополнительно применяются ключевая аутентификация, `ExitOnForwardFailure=yes`, ограничения `AllowTcpForwarding` и контроль адреса привязки порта.
 
@@ -70,4 +70,4 @@ curl http://127.0.0.1:8080
 
 ---
 
-[← Предыдущий этап: NAT](nat.md) | [Завершить и вернуться в README →](../README.md)
+[← Предыдущий этап: Part 7 — NAT](nat.md) | [Завершить и вернуться в README →](../README.md)
